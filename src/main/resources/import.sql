@@ -1,1 +1,2 @@
 INSERT INTO messages(id, content, author, created_at, updated_at) VALUES (0,'Welcome to the Forum!','Admin','2023-01-19 14:43:33.792944','2023-01-19 14:43:33.792944');
+INSERT INTO messages(id, content, author, created_at, updated_at) VALUES (1,'You can write about anything you want, including writing a short presentation about you. Don''t be shy!','Admin','2023-01-19 14:43:33.792944','2023-01-19 14:43:33.792944');
