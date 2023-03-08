@@ -17,7 +17,7 @@ public class Message {
 
     @Id
     @GeneratedValue
-    private Integer id;
+    private long id;
     @NotBlank(message = "Message is mandatory")
     private String content;
     @NotBlank(message = "Name is mandatory")

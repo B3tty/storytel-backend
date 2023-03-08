@@ -3,7 +3,6 @@ package com.storytel.messageboard.controllers;
 import com.storytel.messageboard.models.Message;
 import com.storytel.messageboard.services.MessageService;
 import jakarta.validation.Valid;
-import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,9 +27,7 @@ public class MessageController {
 
     @PostMapping
     public ResponseEntity<Message> createMessage(@Valid @RequestBody Message message) {
-        // message.setId(UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE);
-        message.setCreatedAt(LocalDateTime.now());
-        messageService.saveMessage(message);
+        messageService.createMessage(message);
         return (ResponseEntity.ok(message));
     }
 

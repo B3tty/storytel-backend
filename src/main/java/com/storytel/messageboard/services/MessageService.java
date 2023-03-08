@@ -15,9 +15,8 @@ public class MessageService {
     MessageRepository messageRepository;
 
     public List<Message> getAllMessages() {
-        List<Message> messages = new ArrayList<Message>();
+        List<Message> messages = new ArrayList<>();
         messageRepository.findAll().forEach(message -> messages.add(message));
-
         return (messages);
     }
 
@@ -25,7 +24,9 @@ public class MessageService {
         return (messageRepository.findById(messageId).get());
     }
 
-    public void saveMessage(Message message) {
+    public void createMessage(Message message) {
+        message.setCreatedAt(LocalDateTime.now());
+        message.setUpdatedAt(LocalDateTime.now());
         messageRepository.save(message);
     }
 
