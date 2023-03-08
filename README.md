@@ -15,7 +15,7 @@ Backend coding challenge
 ```json
 {
   "author": "Alice",
-  "text": "Hello world!"
+  "content": "Hello world!"
 }
 ```
 
@@ -24,9 +24,9 @@ You should receive a JSON response with the newly created message, including its
 
 ```json
 {
-  "id": 1,
+  "id": 1163404943818051014,
   "author": "Alice",
-  "text": "Hello world!",
+  "content": "Hello world!",
   "timestamp": "2023-03-08T08:00:00.000+0000"
 }
 ```
