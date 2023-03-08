@@ -21,7 +21,6 @@ public class Message {
     @Id
     @GeneratedValue
     private long id;
-
     @Column(name = "content")
     @NotBlank(message = "Message is mandatory")
     private String content;

@@ -32,7 +32,7 @@ public class MessageController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Message> updateMessageById(@PathVariable Integer id, @RequestBody Message updatedMessage) {
+    public ResponseEntity<Message> updateMessageById(@PathVariable Long id, @RequestBody Message updatedMessage) {
         Message targetMessage = messageService.getMessageById(id);
 
         if (targetMessage == null) {
@@ -48,7 +48,7 @@ public class MessageController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteMessageById(@PathVariable Integer id, @RequestBody Message messageToDelete) {
+    public void deleteMessageById(@PathVariable Long id, @RequestBody Message messageToDelete) {
         Message targetMessage = messageService.getMessageById(id);
 
         if (targetMessage == null) {

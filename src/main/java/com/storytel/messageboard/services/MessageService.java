@@ -20,7 +20,7 @@ public class MessageService {
         return (messages);
     }
 
-    public Message getMessageById(Integer messageId) {
+    public Message getMessageById(Long messageId) {
         return (messageRepository.findById(messageId).get());
     }
 
@@ -30,11 +30,11 @@ public class MessageService {
         messageRepository.save(message);
     }
 
-    public void deleteMessage(Integer id) {
+    public void deleteMessage(Long id) {
         messageRepository.deleteById(id);
     }
 
-    public void updateMessage(Integer id, Message newMessage) {
+    public void updateMessage(Long id, Message newMessage) {
         Message oldMessage = getMessageById(id);
         newMessage.setId(id);
         newMessage.setCreatedAt(oldMessage.getCreatedAt());
