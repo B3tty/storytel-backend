@@ -1,4 +1,5 @@
 package com.storytel.messageboard.controllers;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -16,15 +17,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @AutoConfigureMockMvc
 class MessageControllerTest {
 
-  @Autowired
-  private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-  @BeforeEach
-  void setUp() {
-  }
+    @BeforeEach
+    void setUp() {
+    }
 
-  @Test
-  public void testGetMessages() throws Exception {
-  }
+    @Test
+    public void testGetMessages() throws Exception {
+    }
 
 }

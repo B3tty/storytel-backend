@@ -11,33 +11,33 @@ import org.springframework.stereotype.Service;
 @Service
 public class MessageService {
 
-  @Autowired
-  MessageRepository messageRepository;
+    @Autowired
+    MessageRepository messageRepository;
 
-  public List<Message> getAllMessages() {
-    List<Message> messages = new ArrayList<Message>();
-    messageRepository.findAll().forEach(message -> messages.add(message));
+    public List<Message> getAllMessages() {
+        List<Message> messages = new ArrayList<Message>();
+        messageRepository.findAll().forEach(message -> messages.add(message));
 
-    return (messages);
-  }
+        return (messages);
+    }
 
-  public Message getMessageById(Integer messageId) {
-    return (messageRepository.findById(messageId).get());
-  }
+    public Message getMessageById(Integer messageId) {
+        return (messageRepository.findById(messageId).get());
+    }
 
-  public void saveMessage(Message message) {
-    messageRepository.save(message);
-  }
+    public void saveMessage(Message message) {
+        messageRepository.save(message);
+    }
 
-  public void deleteMessage(Integer id) {
-    messageRepository.deleteById(id);
-  }
+    public void deleteMessage(Integer id) {
+        messageRepository.deleteById(id);
+    }
 
-  public void updateMessage(Integer id, Message newMessage) {
-    Message oldMessage = getMessageById(id);
-    newMessage.setId(id);
-    newMessage.setCreatedAt(oldMessage.getCreatedAt());
-    newMessage.setUpdatedAt(LocalDateTime.now());
-    messageRepository.save(newMessage);
-  }
+    public void updateMessage(Integer id, Message newMessage) {
+        Message oldMessage = getMessageById(id);
+        newMessage.setId(id);
+        newMessage.setCreatedAt(oldMessage.getCreatedAt());
+        newMessage.setUpdatedAt(LocalDateTime.now());
+        messageRepository.save(newMessage);
+    }
 }
