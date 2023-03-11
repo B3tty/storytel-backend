@@ -5,6 +5,9 @@ import com.storytel.messageboard.models.Message;
 import com.storytel.messageboard.services.MessageService;
 import com.storytel.messageboard.services.MessageService.IllegalAuthorException;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,15 +31,17 @@ public class MessageController {
     }
 
     @PostMapping
-    public ResponseEntity<Message> createMessage(@Valid @RequestBody Message message) {
-        var okMessage = messageService.createMessage(message);
+    public ResponseEntity<Message> createMessage(@Valid @RequestBody MessageRequest messageRequest) {
+        var okMessage = messageService.createMessage(messageRequest.message, messageRequest.author);
         return (ResponseEntity.ok(okMessage));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Message> updateMessageById(@PathVariable Long id, @RequestBody Message updatedMessage) {
+    public ResponseEntity<Message> updateMessageById(@PathVariable Long id,
+        @RequestBody MessageRequest updateMessageRequest) {
         try {
-            Message resultMessage = messageService.updateMessage(id, updatedMessage);
+            Message resultMessage = messageService.updateMessage(id,
+                updateMessageRequest.message, updateMessageRequest.author);
             if (resultMessage == null) {
                 return ResponseEntity.notFound().build();
             }
@@ -47,10 +52,12 @@ public class MessageController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteMessageById(@PathVariable Long id, @RequestBody Message messageToDelete) {
+    public ResponseEntity deleteMessageById(@PathVariable Long id,
+        @RequestBody MessageRequest deleteMessageRequest) {
         try {
-            Message resultMessage = messageService.updateMessage(id, messageToDelete);
-            if (resultMessage == null) {
+            boolean resultMessage = messageService.deleteMessage(id, deleteMessageRequest.message
+                , deleteMessageRequest.author);
+            if (!resultMessage) {
                 return ResponseEntity.notFound().build();
             }
             return (ResponseEntity.ok().build());
@@ -59,7 +66,11 @@ public class MessageController {
         }
     }
 
-    public class PostRequest {
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class MessageRequest {
         Message message;
+        Author author;
     }
 }

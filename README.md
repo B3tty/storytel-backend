@@ -9,7 +9,7 @@ Backend coding challenge
 - Alternatively you can run the project in your IDE by right-clicking on the `MessageController` 
   class and selecting "Run as Java Application".
 - Once the application is running, you can test the API endpoints using a tool like Postman or 
-  cURL. For example, to create a new message, you can send a POST request to 
+  cURL. For example, to create a new message, you can send a POST messageRequest to 
   http://localhost:8080/api/messages with a JSON payload like this:
 
 ```json

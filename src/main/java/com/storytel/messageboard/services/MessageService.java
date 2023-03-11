@@ -1,6 +1,7 @@
 package com.storytel.messageboard.services;
 
 import com.storytel.messageboard.models.Message;
+import com.storytel.messageboard.models.Author;
 import com.storytel.messageboard.repositories.MessageRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -29,17 +30,18 @@ public class MessageService {
         }
     }
 
-    public Message createMessage(Message message) {
+    public Message createMessage(Message message, Author author) {
+        message.setAuthor(author);
         message.setCreatedAt(LocalDateTime.now());
         message.setUpdatedAt(LocalDateTime.now());
         messageRepository.save(message);
         return message;
     }
 
-    public boolean deleteMessage(Long id, Message messageToDelete) throws IllegalAuthorException {
+    public boolean deleteMessage(Long id, Message messageToDelete, Author author) throws IllegalAuthorException {
         Message oldMessage = getMessageById(id);
         if (oldMessage != null) {
-            if (!oldMessage.getAuthor().equals(messageToDelete.getAuthor())) {
+            if (oldMessage.getAuthor().getId() != (author.getId())) {
                 throw new IllegalAuthorException();
             }
             messageRepository.deleteById(id);
@@ -49,20 +51,19 @@ public class MessageService {
         }
     }
 
-    public Message updateMessage(Long id, Message newMessage) throws IllegalAuthorException {
+    public Message updateMessage(Long id, Message newMessage, Author author) throws IllegalAuthorException {
         Message oldMessage = getMessageById(id);
         if (oldMessage == null) {
             return null;
         }
-        if (!oldMessage.getAuthor().equals(newMessage.getAuthor())) {
+        if (oldMessage.getAuthor().getId() != (author.getId())) {
             throw new IllegalAuthorException();
         }
 
-        newMessage.setId(id);
-        newMessage.setCreatedAt(oldMessage.getCreatedAt());
-        newMessage.setUpdatedAt(LocalDateTime.now());
-        messageRepository.save(newMessage);
-        return newMessage;
+        oldMessage.setContent(newMessage.getContent());
+        oldMessage.setUpdatedAt(LocalDateTime.now());
+        messageRepository.save(oldMessage);
+        return oldMessage;
     }
 
     public class IllegalAuthorException extends Exception {
