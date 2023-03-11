@@ -40,7 +40,7 @@ public class MessageService {
     public boolean deleteMessage(Long id, Message messageToDelete) throws IllegalAuthorException {
         Message oldMessage = getMessageById(id);
         if (oldMessage != null) {
-            if (oldMessage.getAuthor() != messageToDelete.getAuthor()) {
+            if (!oldMessage.getAuthor().equals(messageToDelete.getAuthor())) {
                 throw new IllegalAuthorException();
             }
             messageRepository.deleteById(id);
@@ -55,7 +55,7 @@ public class MessageService {
         if (oldMessage == null) {
             return null;
         }
-        if (oldMessage.getAuthor() != newMessage.getAuthor()) {
+        if (!oldMessage.getAuthor().equals(newMessage.getAuthor())) {
             throw new IllegalAuthorException();
         }
 
