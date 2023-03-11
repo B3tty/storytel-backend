@@ -2,6 +2,7 @@ package com.storytel.messageboard.controllers;
 
 import com.storytel.messageboard.models.Message;
 import com.storytel.messageboard.services.MessageService;
+import com.storytel.messageboard.services.MessageService.IllegalAuthorException;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -33,32 +34,28 @@ public class MessageController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Message> updateMessageById(@PathVariable Long id, @RequestBody Message updatedMessage) {
-        Message targetMessage = messageService.getMessageById(id);
-
-        if (targetMessage == null) {
-            throw new RuntimeException("Message not found");
-        } else {
-            if (targetMessage.getAuthor().equals(updatedMessage.getAuthor())) {
-                messageService.updateMessage(id, updatedMessage);
-                return (ResponseEntity.ok(updatedMessage));
-            } else {
-                throw new RuntimeException("You are not authorized to delete this message");
+        try {
+            Message resultMessage = messageService.updateMessage(id, updatedMessage);
+            if (resultMessage == null) {
+                return ResponseEntity.notFound().build();
             }
+            return (ResponseEntity.ok(resultMessage));
+        } catch (IllegalAuthorException e) {
+            return ResponseEntity.status(401).build();
         }
     }
 
     @DeleteMapping("/{id}")
-    public void deleteMessageById(@PathVariable Long id, @RequestBody Message messageToDelete) {
-        Message targetMessage = messageService.getMessageById(id);
-
-        if (targetMessage == null) {
-            throw new RuntimeException("Message not found");
-        } else {
-            if (targetMessage.getAuthor().equals(messageToDelete.getAuthor())) {
-                messageService.deleteMessage(id);
-            } else {
-                throw new RuntimeException("You are not authorized to delete this message");
+    public ResponseEntity deleteMessageById(@PathVariable Long id,
+        @RequestBody Message messageToDelete) {
+        try {
+            Message resultMessage = messageService.updateMessage(id, messageToDelete);
+            if (resultMessage == null) {
+                return ResponseEntity.notFound().build();
             }
+            return (ResponseEntity.ok().build());
+        } catch (IllegalAuthorException e) {
+            return ResponseEntity.status(401).build();
         }
     }
 }

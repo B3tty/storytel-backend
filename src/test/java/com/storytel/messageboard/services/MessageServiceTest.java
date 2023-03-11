@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import com.storytel.messageboard.models.Message;
 import com.storytel.messageboard.repositories.MessageRepository;
+import com.storytel.messageboard.services.MessageService.IllegalAuthorException;
+import javax.swing.text.html.Option;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -72,9 +74,9 @@ class MessageServiceTest {
     }
 
     @Test
-    void updateMessageById() {
+    void updateMessageById() throws IllegalAuthorException {
         Message requestedMessage = new Message();
-        requestedMessage.setAuthor("Jane");
+        requestedMessage.setAuthor("Betty");
         requestedMessage.setContent("Updated message");
 
         when(messageRepository.findById(referenceMessage.getId())).thenReturn(Optional.of(referenceMessage));
@@ -93,7 +95,7 @@ class MessageServiceTest {
     }
 
     @Test
-    void updateMessageByIdWhenNotFound() {
+    void updateMessageByIdWhenNotFound() throws IllegalAuthorException {
       when(messageRepository.findById(referenceMessage.getId())).thenReturn(Optional.empty());
 
       Message result = messageService.updateMessage(referenceMessage.getId(), referenceMessage);
@@ -104,24 +106,24 @@ class MessageServiceTest {
     }
 
     @Test
-    void deleteMessageById() {
-      when(messageRepository.existsById(referenceMessage.getId())).thenReturn(true);
+    void deleteMessageById() throws IllegalAuthorException {
+      when(messageRepository.findById(referenceMessage.getId())).thenReturn(Optional.of(referenceMessage));
 
-      boolean result = messageService.deleteMessage(referenceMessage.getId());
+      boolean result = messageService.deleteMessage(referenceMessage.getId(), referenceMessage);
 
       assertTrue(result);
-      verify(messageRepository, times(1)).existsById(referenceMessage.getId());
+      verify(messageRepository, times(1)).findById(referenceMessage.getId());
       verify(messageRepository, times(1)).deleteById(referenceMessage.getId());
     }
 
     @Test
-    void deleteMessageByIdWhenNotFound() {
-      when(messageRepository.existsById(referenceMessage.getId())).thenReturn(false);
+    void deleteMessageByIdWhenNotFound() throws IllegalAuthorException {
+      when(messageRepository.findById(referenceMessage.getId())).thenReturn(Optional.empty());
 
-      boolean result = messageService.deleteMessage(referenceMessage.getId());
+      boolean result = messageService.deleteMessage(referenceMessage.getId(), referenceMessage);
 
       assertFalse(result);
-      verify(messageRepository, times(1)).existsById(referenceMessage.getId());
+      verify(messageRepository, times(1)).findById(referenceMessage.getId());
       verify(messageRepository, times(0)).deleteById(referenceMessage.getId());
     }
 

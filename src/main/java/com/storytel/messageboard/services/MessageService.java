@@ -37,8 +37,12 @@ public class MessageService {
         return message;
     }
 
-    public boolean deleteMessage(Long id) {
-        if (messageRepository.existsById(id)) {
+    public boolean deleteMessage(Long id, Message messageToDelete) throws IllegalAuthorException {
+        Message oldMessage = getMessageById(id);
+        if (oldMessage != null) {
+            if (oldMessage.getAuthor() != messageToDelete.getAuthor()) {
+                throw new IllegalAuthorException();
+            }
             messageRepository.deleteById(id);
             return true;
         } else {
@@ -46,15 +50,22 @@ public class MessageService {
         }
     }
 
-    public Message updateMessage(Long id, Message newMessage) {
+    public Message updateMessage(Long id, Message newMessage) throws IllegalAuthorException {
         Message oldMessage = getMessageById(id);
         if (oldMessage == null) {
             return null;
         }
+        if (oldMessage.getAuthor() != newMessage.getAuthor()) {
+            throw new IllegalAuthorException();
+        }
+
         newMessage.setId(id);
         newMessage.setCreatedAt(oldMessage.getCreatedAt());
         newMessage.setUpdatedAt(LocalDateTime.now());
         messageRepository.save(newMessage);
         return newMessage;
+    }
+
+    public class IllegalAuthorException extends Exception {
     }
 }
