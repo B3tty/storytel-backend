@@ -1,2 +1,3 @@
-INSERT INTO messages(id, content, author, created_at, updated_at) VALUES (1,'Welcome to the Forum!','Admin','2023-01-19 14:43:33.792944','2023-01-19 14:43:33.792944');
-INSERT INTO messages(id, content, author, created_at, updated_at) VALUES (2,'You can write about anything you want, including writing a short presentation about you. Don''t be shy!','Admin','2023-01-19 14:43:33.792944','2023-01-19 14:43:33.792944');
+INSERT INTO authors(id, name) VALUES (1,'Admin');
+INSERT INTO messages(id, content, author_id, created_at, updated_at) VALUES (1,'Welcome to the Forum!',1,'2023-01-19 14:43:33.792944','2023-01-19 14:43:33.792944');
+INSERT INTO messages(id, content, author_id, created_at, updated_at) VALUES (2,'You can write about anything you want, including writing a short presentation about you. Don''t be shy!',1,'2023-01-19 14:43:33.792944','2023-01-19 14:43:33.792944');

@@ -2,7 +2,6 @@ package com.storytel.messageboard.services;
 
 import com.storytel.messageboard.models.Message;
 import com.storytel.messageboard.repositories.MessageRepository;
-import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

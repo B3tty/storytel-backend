@@ -1,5 +1,6 @@
 package com.storytel.messageboard.controllers;
 
+import com.storytel.messageboard.models.Author;
 import com.storytel.messageboard.models.Message;
 import com.storytel.messageboard.services.MessageService;
 import com.storytel.messageboard.services.MessageService.IllegalAuthorException;
@@ -56,5 +57,9 @@ public class MessageController {
         } catch (IllegalAuthorException e) {
             return ResponseEntity.status(401).build();
         }
+    }
+
+    public class PostRequest {
+        Message message;
     }
 }

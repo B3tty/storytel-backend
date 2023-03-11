@@ -2,6 +2,7 @@ package com.storytel.messageboard.services;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.storytel.messageboard.models.Author;
 import com.storytel.messageboard.models.Message;
 import com.storytel.messageboard.repositories.MessageRepository;
 import com.storytel.messageboard.services.MessageService.IllegalAuthorException;
@@ -28,12 +29,22 @@ class MessageServiceTest {
     private MessageService messageService;
 
     private Message referenceMessage;
+    private Author referenceAuthor;
+    private Author differentAuthor;
 
     @BeforeEach
     void setUp() {
+        referenceAuthor = new Author();
+        referenceAuthor.setId(1);
+        referenceAuthor.setName("Betty");
+
+        differentAuthor = new Author();
+        differentAuthor.setId(2);
+        differentAuthor.setName("Eve");
+
         referenceMessage = new Message();
         referenceMessage.setId(1L);
-        referenceMessage.setAuthor("Betty");
+        referenceMessage.setAuthor(referenceAuthor);
         referenceMessage.setContent("Hello world!");
     }
 
@@ -77,7 +88,7 @@ class MessageServiceTest {
     @Test
     void updateMessageById() throws IllegalAuthorException {
         Message requestedMessage = new Message();
-        requestedMessage.setAuthor("Betty");
+        requestedMessage.setAuthor(referenceAuthor);
         requestedMessage.setContent("Updated message");
 
         when(messageRepository.findById(referenceMessage.getId())).thenReturn(Optional.of(referenceMessage));
@@ -112,7 +123,7 @@ class MessageServiceTest {
 
       Message requestMessage = new Message();
       requestMessage.setId(referenceMessage.getId());
-      requestMessage.setAuthor("Eve");
+      requestMessage.setAuthor(differentAuthor);
 
       assertThrows(
           IllegalAuthorException.class,
@@ -151,7 +162,7 @@ class MessageServiceTest {
 
       Message requestMessage = new Message();
       requestMessage.setId(referenceMessage.getId());
-      requestMessage.setAuthor("Eve");
+      requestMessage.setAuthor(differentAuthor);
 
       assertThrows(
           IllegalAuthorException.class,
