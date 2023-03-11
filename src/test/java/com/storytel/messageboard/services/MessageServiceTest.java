@@ -2,10 +2,10 @@ package com.storytel.messageboard.services;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.storytel.messageboard.models.Author;
+import com.storytel.messageboard.models.User;
 import com.storytel.messageboard.models.Message;
 import com.storytel.messageboard.repositories.MessageRepository;
-import com.storytel.messageboard.services.MessageService.IllegalAuthorException;
+import com.storytel.messageboard.services.MessageService.IllegalUserException;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,22 +29,22 @@ class MessageServiceTest {
     private MessageService messageService;
 
     private Message referenceMessage;
-    private Author referenceAuthor;
-    private Author differentAuthor;
+    private User referenceUser;
+    private User differentUser;
 
     @BeforeEach
     void setUp() {
-        referenceAuthor = new Author();
-        referenceAuthor.setId(1);
-        referenceAuthor.setName("Betty");
+        referenceUser = new User();
+        referenceUser.setId(1);
+        referenceUser.setName("Betty");
 
-        differentAuthor = new Author();
-        differentAuthor.setId(2);
-        differentAuthor.setName("Eve");
+        differentUser = new User();
+        differentUser.setId(2);
+        differentUser.setName("Eve");
 
         referenceMessage = new Message();
         referenceMessage.setId(1L);
-        referenceMessage.setAuthor(referenceAuthor);
+        referenceMessage.setUser(referenceUser);
         referenceMessage.setContent("Hello world!");
     }
 
@@ -52,11 +52,11 @@ class MessageServiceTest {
     void createMessage() {
       when(messageRepository.save(any(Message.class))).thenReturn(referenceMessage);
 
-      Message result = messageService.createMessage(referenceMessage, referenceAuthor);
+      Message result = messageService.createMessage(referenceMessage, referenceUser);
 
       assertNotNull(result);
       assertEquals(referenceMessage.getId(), result.getId());
-      assertEquals(referenceMessage.getAuthor(), result.getAuthor());
+      assertEquals(referenceMessage.getUser(), result.getUser());
       assertEquals(referenceMessage.getContent(), result.getContent());
       verify(messageRepository, times(1)).save(referenceMessage);
     }
@@ -70,7 +70,7 @@ class MessageServiceTest {
 
       assertNotNull(result);
       assertEquals(referenceMessage.getId(), result.getId());
-      assertEquals(referenceMessage.getAuthor(), result.getAuthor());
+      assertEquals(referenceMessage.getUser(), result.getUser());
       assertEquals(referenceMessage.getContent(), result.getContent());
       verify(messageRepository, times(1)).findById(referenceMessage.getId());
     }
@@ -86,20 +86,20 @@ class MessageServiceTest {
     }
 
     @Test
-    void updateMessageById() throws IllegalAuthorException {
+    void updateMessageById() throws IllegalUserException {
         Message requestedMessage = new Message();
         requestedMessage.setContent("Updated message");
-        requestedMessage.setAuthor(referenceAuthor);
+        requestedMessage.setUser(referenceUser);
 
         when(messageRepository.findById(referenceMessage.getId())).thenReturn(Optional.of(referenceMessage));
         when(messageRepository.save(any(Message.class))).thenReturn(requestedMessage);
 
         Message result = messageService.updateMessage(referenceMessage.getId(), requestedMessage,
-            referenceAuthor);
+            referenceUser);
 
         assertNotNull(result);
         assertEquals(referenceMessage.getId(), result.getId());
-        assertEquals(requestedMessage.getAuthor(), result.getAuthor());
+        assertEquals(requestedMessage.getUser(), result.getUser());
         assertEquals(requestedMessage.getContent(), result.getContent());
         assertEquals(requestedMessage.getCreatedAt(), result.getCreatedAt());
         assertNotNull(result.getUpdatedAt());
@@ -108,11 +108,11 @@ class MessageServiceTest {
     }
 
     @Test
-    void updateMessageByIdWhenNotFound() throws IllegalAuthorException {
+    void updateMessageByIdWhenNotFound() throws IllegalUserException {
       when(messageRepository.findById(referenceMessage.getId())).thenReturn(Optional.empty());
 
       Message result = messageService.updateMessage(referenceMessage.getId(), referenceMessage,
-          referenceAuthor);
+          referenceUser);
 
       assertNull(result);
       verify(messageRepository, times(1)).findById(referenceMessage.getId());
@@ -120,15 +120,16 @@ class MessageServiceTest {
     }
 
     @Test
-    void updateMessageByIdWhenDifferentAuthor() throws IllegalAuthorException {
+    void updateMessageByIdWhenDifferentUser() throws IllegalUserException {
       when(messageRepository.findById(referenceMessage.getId())).thenReturn(Optional.of(referenceMessage));
 
       Message requestMessage = new Message();
       requestMessage.setId(referenceMessage.getId());
 
       assertThrows(
-          IllegalAuthorException.class,
-          () -> messageService.updateMessage(referenceMessage.getId(), requestMessage, differentAuthor)
+          IllegalUserException.class,
+          () -> messageService.updateMessage(referenceMessage.getId(), requestMessage,
+              differentUser)
       );
 
       verify(messageRepository, times(1)).findById(referenceMessage.getId());
@@ -136,10 +137,10 @@ class MessageServiceTest {
     }
 
     @Test
-    void deleteMessageById() throws IllegalAuthorException {
+    void deleteMessageById() throws IllegalUserException {
       when(messageRepository.findById(referenceMessage.getId())).thenReturn(Optional.of(referenceMessage));
 
-      boolean result = messageService.deleteMessage(referenceMessage.getId(), referenceAuthor);
+      boolean result = messageService.deleteMessage(referenceMessage.getId(), referenceUser);
 
       assertTrue(result);
       verify(messageRepository, times(1)).findById(referenceMessage.getId());
@@ -147,10 +148,10 @@ class MessageServiceTest {
     }
 
     @Test
-    void deleteMessageByIdWhenNotFound() throws IllegalAuthorException {
+    void deleteMessageByIdWhenNotFound() throws IllegalUserException {
       when(messageRepository.findById(referenceMessage.getId())).thenReturn(Optional.empty());
 
-      boolean result = messageService.deleteMessage(referenceMessage.getId(), referenceAuthor);
+      boolean result = messageService.deleteMessage(referenceMessage.getId(), referenceUser);
 
       assertFalse(result);
       verify(messageRepository, times(1)).findById(referenceMessage.getId());
@@ -158,15 +159,15 @@ class MessageServiceTest {
     }
 
     @Test
-    void deleteMessageByIdWhenDifferentAuthor() throws IllegalAuthorException {
+    void deleteMessageByIdWhenDifferentUser() throws IllegalUserException {
       when(messageRepository.findById(referenceMessage.getId())).thenReturn(Optional.of(referenceMessage));
 
       Message requestMessage = new Message();
       requestMessage.setId(referenceMessage.getId());
 
       assertThrows(
-          IllegalAuthorException.class,
-          () -> messageService.deleteMessage(referenceMessage.getId(), differentAuthor)
+          IllegalUserException.class,
+          () -> messageService.deleteMessage(referenceMessage.getId(), differentUser)
       );
 
       verify(messageRepository, times(1)).findById(referenceMessage.getId());
