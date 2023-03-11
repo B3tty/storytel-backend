@@ -2,6 +2,7 @@ package com.storytel.messageboard.services;
 
 import com.storytel.messageboard.models.Message;
 import com.storytel.messageboard.repositories.MessageRepository;
+import jakarta.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,24 +22,39 @@ public class MessageService {
     }
 
     public Message getMessageById(Long messageId) {
-        return (messageRepository.findById(messageId).get());
+        var message = messageRepository.findById(messageId);
+        if (!message.isEmpty()) {
+            return message.get();
+        } else {
+            return null;
+        }
     }
 
-    public void createMessage(Message message) {
+    public Message createMessage(Message message) {
         message.setCreatedAt(LocalDateTime.now());
         message.setUpdatedAt(LocalDateTime.now());
         messageRepository.save(message);
+        return message;
     }
 
-    public void deleteMessage(Long id) {
-        messageRepository.deleteById(id);
+    public boolean deleteMessage(Long id) {
+        if (messageRepository.existsById(id)) {
+            messageRepository.deleteById(id);
+            return true;
+        } else {
+            return false;
+        }
     }
 
-    public void updateMessage(Long id, Message newMessage) {
+    public Message updateMessage(Long id, Message newMessage) {
         Message oldMessage = getMessageById(id);
+        if (oldMessage == null) {
+            return null;
+        }
         newMessage.setId(id);
         newMessage.setCreatedAt(oldMessage.getCreatedAt());
         newMessage.setUpdatedAt(LocalDateTime.now());
         messageRepository.save(newMessage);
+        return newMessage;
     }
 }

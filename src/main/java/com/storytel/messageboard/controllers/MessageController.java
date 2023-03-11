@@ -27,8 +27,8 @@ public class MessageController {
 
     @PostMapping
     public ResponseEntity<Message> createMessage(@Valid @RequestBody Message message) {
-        messageService.createMessage(message);
-        return (ResponseEntity.ok(message));
+        var okMessage = messageService.createMessage(message);
+        return (ResponseEntity.ok(okMessage));
     }
 
     @PutMapping("/{id}")
