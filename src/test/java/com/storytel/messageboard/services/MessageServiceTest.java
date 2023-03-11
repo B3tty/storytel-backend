@@ -1,24 +1,29 @@
 package com.storytel.messageboard.services;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-import com.storytel.messageboard.models.User;
 import com.storytel.messageboard.models.Message;
+import com.storytel.messageboard.models.User;
 import com.storytel.messageboard.repositories.MessageRepository;
 import com.storytel.messageboard.services.MessageService.IllegalUserException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.Optional;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class MessageServiceTest {
@@ -94,8 +99,7 @@ class MessageServiceTest {
         when(messageRepository.findById(referenceMessage.getId())).thenReturn(Optional.of(referenceMessage));
         when(messageRepository.save(any(Message.class))).thenReturn(requestedMessage);
 
-        Message result = messageService.updateMessage(referenceMessage.getId(), requestedMessage,
-            referenceUser);
+        Message result = messageService.updateMessage(referenceMessage.getId(), requestedMessage, referenceUser);
 
         assertNotNull(result);
         assertEquals(referenceMessage.getId(), result.getId());
