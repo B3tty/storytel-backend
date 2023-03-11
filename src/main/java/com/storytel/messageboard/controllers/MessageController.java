@@ -46,8 +46,7 @@ public class MessageController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteMessageById(@PathVariable Long id,
-        @RequestBody Message messageToDelete) {
+    public ResponseEntity deleteMessageById(@PathVariable Long id, @RequestBody Message messageToDelete) {
         try {
             Message resultMessage = messageService.updateMessage(id, messageToDelete);
             if (resultMessage == null) {

@@ -5,7 +5,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.storytel.messageboard.models.Message;
 import com.storytel.messageboard.repositories.MessageRepository;
 import com.storytel.messageboard.services.MessageService.IllegalAuthorException;
-import javax.swing.text.html.Option;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -106,6 +107,23 @@ class MessageServiceTest {
     }
 
     @Test
+    void updateMessageByIdWhenDifferentAuthor() throws IllegalAuthorException {
+      when(messageRepository.findById(referenceMessage.getId())).thenReturn(Optional.of(referenceMessage));
+
+      Message requestMessage = new Message();
+      requestMessage.setId(referenceMessage.getId());
+      requestMessage.setAuthor("Eve");
+
+      assertThrows(
+          IllegalAuthorException.class,
+          () -> messageService.updateMessage(referenceMessage.getId(), requestMessage)
+      );
+
+      verify(messageRepository, times(1)).findById(referenceMessage.getId());
+      verify(messageRepository, times(0)).save(any(Message.class));
+    }
+
+    @Test
     void deleteMessageById() throws IllegalAuthorException {
       when(messageRepository.findById(referenceMessage.getId())).thenReturn(Optional.of(referenceMessage));
 
@@ -128,6 +146,30 @@ class MessageServiceTest {
     }
 
     @Test
+    void deleteMessageByIdWhenDifferentAuthor() throws IllegalAuthorException {
+      when(messageRepository.findById(referenceMessage.getId())).thenReturn(Optional.of(referenceMessage));
+
+      Message requestMessage = new Message();
+      requestMessage.setId(referenceMessage.getId());
+      requestMessage.setAuthor("Eve");
+
+      assertThrows(
+          IllegalAuthorException.class,
+          () -> messageService.deleteMessage(referenceMessage.getId(), requestMessage)
+      );
+
+      verify(messageRepository, times(1)).findById(referenceMessage.getId());
+      verify(messageRepository, times(0)).deleteById(referenceMessage.getId());
+    }
+
+    @Test
     void getAllMessages() {
+      when(messageRepository.findAll()).thenReturn(new ArrayList<>(List.of(referenceMessage)));
+      List<Message> result = messageService.getAllMessages();
+
+      assertNotNull(result);
+      assertEquals(1, result.size());
+      assertEquals(referenceMessage, result.get(0));
+      verify(messageRepository, times(1)).findAll();
     }
 }
