@@ -38,7 +38,7 @@ public class MessageController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Message> updateMessageById(@PathVariable Long id,
-        @RequestBody MessageRequest updateMessageRequest) {
+        @Valid @RequestBody MessageRequest updateMessageRequest) {
         try {
             Message resultMessage = messageService.updateMessage(id,
                 updateMessageRequest.message, updateMessageRequest.author);
@@ -53,10 +53,9 @@ public class MessageController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity deleteMessageById(@PathVariable Long id,
-        @RequestBody MessageRequest deleteMessageRequest) {
+        @Valid @RequestBody Author author) {
         try {
-            boolean resultMessage = messageService.deleteMessage(id, deleteMessageRequest.message
-                , deleteMessageRequest.author);
+            boolean resultMessage = messageService.deleteMessage(id, author);
             if (!resultMessage) {
                 return ResponseEntity.notFound().build();
             }
