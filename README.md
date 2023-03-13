@@ -1,6 +1,76 @@
-# storytel-backend
-Backend coding challenge
+# Message Board API Documentation
 
+This API provides the functionality to manage a public message board, allowing users to create, 
+read, update, and delete messages.
+
+## Overview
+
+### Architecture
+
+This RESTful API service is built using the Spring Boot framework, which provides a lightweight 
+and easy-to-use platform for building web applications in Java.
+
+The service follows a layered architecture pattern, with the following layers:
+
+- Controller layer: This layer receives incoming HTTP requests and sends back HTTP responses. It 
+handles the input validation, and calls the appropriate service layer methods to process the requests.
+
+- Service layer: This layer contains the business logic of the application. It handles the 
+database interactions through a repository interface, and performs any necessary data processing and transformations.
+
+- Repository layer: This layer is responsible for the data access and persistence. It uses a 
+CrudRepository interface provided by Spring Data JPA to perform the basic CRUD operations on a database.
+
+- Model layer: This layer contains the data model and entities used by the application. It 
+defines the data structures that are stored and manipulated by the service, such as messages and 
+  users.
+
+### Endpoints
+The following endpoints are available in this API:
+
+- GET /api/messages: Returns a list of all messages stored in the database.
+
+- POST /api/messages: Creates a new message in the database. The request body should contain the 
+user and text fields.
+
+- PUT /api/messages/{id}: Updates an existing message with the specified id in the database. The 
+request body should contain the user and text fields.
+
+- DELETE /api/messages/{id}: Deletes the message with the specified id from the database. The 
+request body should contain the user.
+
+- GET /api/users: Returns a list of all users stored in the database.
+
+- POST /api/users: Creates a new user in the database. The request body should contain the
+username.
+
+### Authentication and Authorization
+
+The user is passed in the body of the request and compared to the initial user who wrote the 
+target message to edit or delete. At the moment it is not perfect before the person making the 
+request is passing the user in the body.
+
+### Improvements
+Here are some suggestions for improving the Message Board API service:
+
+- Add authentication and authorization: To restrict access to the API and provide better 
+  security, we can add an authentication and authorization mechanism. For example, we can use 
+  Spring  Security to implement OAuth2 authentication with JWT tokens.
+
+- Implement pagination: If the number of messages in the database grows too large, it may become 
+  inefficient to return all messages in a single response. We can implement pagination to limit the number of messages returned in each response and allow clients to navigate through the pages.
+
+- Improve error handling: Currently, the API returns generic error responses for all types of 
+  errors. We can improve the error handling by providing more specific error messages and status codes for different types of errors. For example, we can return a 400 Bad Request status code with a message explaining the validation errors if the input data is invalid.
+
+- Deployment: Currently, this project is only configured to be run locally with Maven. It would 
+  need some edits to be deployed in the cloud (for example with AWS or GCP). Some specific 
+  configurations would be needed, for example.
+
+- Health checks: If we deploy this service, it would be interesting to have some health checks 
+  available to get information on the service status
+
+- Logging and monitoring
 
 ## Running the project
 
